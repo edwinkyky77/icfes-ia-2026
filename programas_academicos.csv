@@ -1,0 +1,29 @@
+Carrera,Area_Principal,Nivel_Puntaje,Ponderado_Mate,Ponderado_Lectura
+Ingeniería de Sistemas / IA,Matemáticas,Top,0.4,0.2
+Física Pura,Matemáticas,Top,0.5,0.1
+Economía,Matemáticas,Top,0.35,0.25
+Ingeniería Civil,Matemáticas,Medio,0.4,0.15
+Contaduría Pública,Matemáticas,Medio,0.3,0.2
+Arquitectura,Matemáticas,Medio,0.25,0.2
+Tecnología en Desarrollo de Software,Matemáticas,Tec,0.5,0.1
+Medicina,C. Naturales,Top,0.3,0.2
+Química Farmacéutica,C. Naturales,Top,0.4,0.15
+Biología Marina,C. Naturales,Top,0.35,0.2
+Enfermería,C. Naturales,Medio,0.25,0.25
+Ingeniería Ambiental,C. Naturales,Medio,0.3,0.2
+Tecnología en Regencia de Farmacia,C. Naturales,Tec,0.4,0.1
+Derecho,Lectura Crítica,Top,0.15,0.4
+Filosofía,Lectura Crítica,Top,0.1,0.5
+Ciencia Política,Lectura Crítica,Top,0.2,0.35
+Psicología,Lectura Crítica,Medio,0.2,0.3
+Comunicación Social,Lectura Crítica,Medio,0.15,0.35
+Tecnología en Gestión Documental,Lectura Crítica,Tec,0.1,0.4
+Relaciones Internacionales,Sociales,Top,0.2,0.3
+Historia,Sociales,Top,0.1,0.4
+Licenciatura en Ciencias Sociales,Sociales,Medio,0.15,0.35
+Trabajo Social,Sociales,Medio,0.1,0.3
+Tecnología en Gestión Comunitaria,Sociales,Tec,0.1,0.3
+Negocios Internacionales,Inglés,Top,0.3,0.2
+Lenguas Modernas,Inglés,Top,0.1,0.4
+Turismo y Hotelería,Inglés,Medio,0.2,0.25
+Asistente Bilingüe,Inglés,Tec,0.1,0.4
