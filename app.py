@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import altair as alt
 import os 
+import time
 # Importamos la lógica de tu Predict.py
 from Predict import predecir, features
 
@@ -21,36 +22,41 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 2. CONFIGURACIÓN DE RUTAS Y CARGA (Soporte ANSI/G:) ---
-ruta_local = r"G:\Inteligencia Artificial\Proyecto ICFES\career_prediction_package\programas_academicos.csv"
+# --- 2. CONFIGURACIÓN DE RUTAS DINÁMICAS (Soporte Nube/Local) ---
+# Obtenemos la carpeta actual donde reside app.py
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+nombre_archivo = "programas_academicos.csv"
+ruta_dinamica = os.path.join(BASE_DIR, nombre_archivo)
+
 df_catalogo = None
 
 def cargar_csv_seguro(ruta):
     try:
-        # 'latin-1' es la clave para leer archivos ANSI creados en Bloc de Notas (tildes/eñes)
+        # Intentamos latin-1 para compatibilidad con Excel/ANSI de Windows
         return pd.read_csv(ruta, encoding='latin-1')
     except Exception:
         try:
+            # Si falla, intentamos utf-8 estándar de la nube
             return pd.read_csv(ruta, encoding='utf-8')
         except Exception as e:
-            st.sidebar.error(f"Error al leer el archivo: {e}")
+            st.sidebar.error(f"Error al leer la base de datos: {e}")
             return None
 
-if os.path.exists(ruta_local):
-    df_catalogo = cargar_csv_seguro(ruta_local)
+# Lógica de detección de base de datos
+if os.path.exists(ruta_dinamica):
+    df_catalogo = cargar_csv_seguro(ruta_dinamica)
     if df_catalogo is not None:
-        st.sidebar.success("✅ Base de datos G: vinculada (ANSI)")
+        st.sidebar.success("✅ Base de Datos Conectada")
 else:
-    st.sidebar.warning("⚠️ No se encontró programas_academicos.csv en G:. Usando respaldo.")
+    st.sidebar.warning("⚠️ Usando motor de respaldo (CSV no detectado)")
 
-# --- 3. LÓGICA DE CÁLCULO (Mantenida 100%) ---
+# --- 3. LÓGICA DE CÁLCULO ---
 
 def aplicar_variabilidad(notas):
-    # Fluctuación para realismo (+/- 1.8 pts)
     return [max(0, min(100, n + np.random.normal(0, 1.8))) for n in notas]
 
 def calcular_global(notas):
-    # Fórmula oficial: (Lectura*3 + Mate*3 + Soc*3 + Nat*3 + Inglés*1) / 13 * 5
+    # Fórmula oficial ICFES (Pesos: 3, 3, 3, 3, 1)
     puntaje = ((notas[4] * 3) + (notas[1] * 3) + (notas[2] * 3) + (notas[3] * 3) + (notas[0] * 1)) / 13 * 5
     return int(max(0, min(500, puntaje)))
 
@@ -89,7 +95,7 @@ def obtener_recomendaciones_realistas(notas_dict, global_score):
     return perfiles[fuerte_1][0], perfiles[fuerte_1][1], sugerencias, fuerte_1, rango
 
 # --- 4. INTERFAZ DE USUARIO ---
-st.title("🎓 Consultor IA: Diagnóstico de Alto Rendimiento & Vocacional Real")
+st.title("🎓 Consultor IA: Diagnóstico de Alto Rendimiento & Vocacional")
 st.write("Predicción multivariable basada en Redes Neuronales y Big Data.")
 st.divider()
 
@@ -169,8 +175,8 @@ with col_input:
                 st.markdown(f"<div class='perfil-header' style='background:{p_col}22; border-color:{p_col};'> <h3 style='margin:0; color:{p_col};'>Perfil {p_nom}</h3> <p style='margin:5px 0 0 0; color:#333;'>Nivel de proyección académica: <b>{nivel_r}</b></p> </div>", unsafe_allow_html=True)
 
                 chart = alt.Chart(df_res).mark_bar(color=p_col).encode(
-                    x=alt.X('Materia:N', sort=None),
-                    y=alt.Y('Puntaje:Q', scale=alt.Scale(domain=[0, 100])),
+                    x=alt.X('Materia:N', sort=None, title='Materias evaluadas'),
+                    y=alt.Y('Puntaje:Q', scale=alt.Scale(domain=[0, 100]), title='Puntaje (0-100)'),
                     tooltip=['Materia', 'Puntaje']
                 ).properties(height=350)
                 st.altair_chart(chart, use_container_width=True)
@@ -182,9 +188,6 @@ with col_input:
                 st.write("---")
                 st.markdown(f"#### 🎓 Abanico de Carreras Sugeridas ({nivel_r})")
                 
-                if df_catalogo is not None:
-                    st.caption("📍 Datos vinculados desde G:\...\programas_academicos.csv")
-                
                 c_grid = st.columns(3)
                 for i, carrera in enumerate(sugerencias):
                     with c_grid[i % 3]:
@@ -193,7 +196,7 @@ with col_input:
                 if puntaje_global > 380: st.balloons()
                 
         except Exception as e:
-            st.error(f"Error técnico: {e}")
+            st.error(f"Error técnico durante la predicción: {e}")
 
 # --- SIDEBAR (COMPLEMENTO TÉCNICO IA) ---
 st.sidebar.title("🛠️ Panel Técnico de IA")
@@ -203,5 +206,5 @@ with st.sidebar.expander("Ver Arquitectura del Modelo"):
     st.write("**Capas:** Entrada + 3 Ocultas + Salida")
     st.write("**Función Activación:** ReLU / Sigmoid")
 
-st.sidebar.info("💡 **Dato de Fiabilidad:** El modelo detecta patrones socioeconómicos como 'Lavadora' o 'Postgrado' para ajustar los pesos de éxito académico.")
-st.sidebar.caption("Unidad G: / Proyecto ICFES v1.0 - 2026")
+st.sidebar.info("💡 **Dato de Fiabilidad:** El modelo analiza patrones socioeconómicos para ajustar los pesos de éxito académico.")
+st.sidebar.caption("Proyecto ICFES v1.0 - 2026")
