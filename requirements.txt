@@ -1,5 +1,6 @@
 streamlit
 pandas
-numpy<2.0.0
+numpy
 tensorflow-cpu
+altair
 scikit-learn
